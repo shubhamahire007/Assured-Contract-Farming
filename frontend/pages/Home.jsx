@@ -1,4 +1,4 @@
-
+import RequirementsList from "../components/Requirement/RequirementsList";
 const Home = () => {
   const role = localStorage.getItem("role") || "";
   return (
@@ -8,7 +8,7 @@ const Home = () => {
       {role == "Farmer" && (
         <>
           <h2>Buyers Requirements</h2>
-         
+          <RequirementsList />
         </>
       )}
     </div>

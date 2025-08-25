@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Tabs, Tab, Box } from "@mui/material";
-import RequirementForm from "./RequirementForm";
-import RequirementsList from "./RequirementsList";
+import RequirementsList from "../../../components/Requirement/RequirementsList";
 import ContractsList from "./ContractsList";
+import PostRequirement from '../../../components/Requirement/PostRequirement';
 
 function BuyerDashboard() {
   const [tab, setTab] = useState(0);
@@ -18,7 +18,7 @@ function BuyerDashboard() {
       <Box sx={{ mt: 3 }}>
         {tab === 0 && <RequirementsList />}
         {tab === 1 && <ContractsList />}
-        {tab === 2 && <RequirementForm />}
+        {tab === 2 && <PostRequirement />}
       </Box>
     </Box>
   );

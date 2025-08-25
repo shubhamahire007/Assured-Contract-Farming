@@ -1,22 +1,11 @@
 import express from "express";
 import { login, signUp } from "../controllers/userController.js";
-import { getRequirements, saveRequirements, getRequirementById,getRequirementByBuyerId } from "../controllers/requirements.js";
 import { isFarmer, auth, isBuyer, isAdmin } from "../middlewares/authMiddleware.js";
-const router = express.Router();
 
-router.get('/test' , (req,res) => {
-    res.json({ 
-        message: "Test route working" 
-    });
-})
+const router = express.Router();
 
 router.post('/login', login);
 router.post('/signup', signUp);
-
-router.post('/requirements', auth, isBuyer, saveRequirements);
-router.get('/requirements', auth, getRequirements);
-router.get('/requirements/req/:id', auth, getRequirementById);
-router.get('/requirements/buyer/:id', auth, getRequirementByBuyerId);
 
 router.get('/farmer', auth, isFarmer, (req,res) => {
     res.json({

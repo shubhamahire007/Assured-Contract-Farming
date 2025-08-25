@@ -8,28 +8,29 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
-    const navigate = useNavigate();
-    const {setLogin} = useContext(AppContext);
+  const navigate = useNavigate();
+  const { setLogin } = useContext(AppContext);
   const submitHandler = async (data) => {
     try {
-        const res = await fetch(`${BASE_URL}/login`, {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify(data) // converted from js object to JSON
-        });
+      const res = await fetch(`${BASE_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data), // converted from js object to JSON
+      });
 
-        const result = await res.json(); // converted json response to JS object
-
-        if (result.success) {
+      console.log("response:", res);
+      const result = await res.json(); // converted server response to JS object
+      console.log("result:", result);
+      if (result.success) {
         localStorage.setItem("token", result.token);
         localStorage.setItem("email", result.userObj.email);
         localStorage.setItem("name", result.userObj.name);
         localStorage.setItem("role", result.userObj.role);
         localStorage.setItem("id", result.userObj._id);
-        // console.log("id: ", result.userObj._id);
-        if(result.userObj.role == "Admin"){
+
+        if (result.userObj.role == "Admin") {
           navigate("/admin-dashboard");
         } else {
           navigate("/");
@@ -40,21 +41,17 @@ const Login = () => {
         toast.error(result.message || "Login failed");
       }
     } catch (error) {
-        console.error("Error:", error);
-        toast.error(error.message || "An error occurred");
+      console.error("Error:", error);
+      toast.error(error.message || "An error occurred");
     }
-  } 
+  };
 
   return (
     <div>
       <h1>Login</h1>
 
       <form onSubmit={handleSubmit(submitHandler)}>
-        <input
-          type="email"
-          placeholder="Email"
-          {...register("email")}
-        />
+        <input type="email" placeholder="Email" {...register("email")} />
         <br />
         <input
           type="password"

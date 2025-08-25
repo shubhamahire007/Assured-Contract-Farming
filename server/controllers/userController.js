@@ -75,26 +75,27 @@ export const login = async (req, res) => {
         id: userData._id,
       };
       let token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "2h",
+        expiresIn: "5h",
       });
       const userObj = userData.toObject();
       console.log(userObj)
       userObj.password = undefined;
       userObj.token = token;
-      const options = {
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        httpOnly: true, // means it cant access at client side
-      };
-      res.cookie("myToken", token, options).status(200).json({
+      // const options = {
+      //   expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      //   httpOnly: true, // means it cant access at client side
+      // };
+      // res.cookie("myToken", token, options).status(200).json({
+      //   success: true,
+      //   message: "login success",
+      //   userObj,
+      //   token,
+      // });
+      res.status(200).json({
         success: true,
         message: "login success",
         userObj,
         token,
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Incorrect password",
       });
     }
   } catch (error) {

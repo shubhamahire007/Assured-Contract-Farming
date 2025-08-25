@@ -9,7 +9,7 @@ const Signup = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  const submitHandler = async (data) => {
+  const onSubmit = async (data) => {
     try {
       const res = await fetch(`${BASE_URL}/signup`, {
         method: "POST",
@@ -37,7 +37,7 @@ const Signup = () => {
     <div>
       <h1>Signup</h1>
 
-      <form onSubmit={handleSubmit(submitHandler)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
 
         <input
           type="text"
