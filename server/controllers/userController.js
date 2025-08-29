@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import dotenv from "dotenv";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -40,6 +40,7 @@ export const signUp = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User created successfully",
+      data: newUser,
     });
   } catch (error) {
     return res.status(500).json({
@@ -53,18 +54,18 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-        return res.status(400).json({
-            success: false,
-            message: "Please fill details",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Please fill details",
+      });
     }
-    
+
     let userData = await User.findOne({ email });
     if (!userData) {
-        return res.status(404).json({
-            success: false,
-            message: "User not registered. Do signUp",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "User not registered. Do signUp",
+      });
     }
 
     let isMatch = await bcrypt.compare(password, userData.password);
@@ -78,7 +79,7 @@ export const login = async (req, res) => {
         expiresIn: "5h",
       });
       const userObj = userData.toObject();
-      console.log(userObj)
+      // console.log(userObj)
       userObj.password = undefined;
       userObj.token = token;
       // const options = {
@@ -97,7 +98,84 @@ export const login = async (req, res) => {
         userObj,
         token,
       });
+    } else {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credentials",
+      });
     }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getFarmers = async (req, res) => {
+  try {
+    const farmers = await User.find({ role: "Farmer" });
+
+    if (!farmers) {
+      return res.status(404).json({
+        success: false,
+        message: "No farmers found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: farmers,
+      message: "Farmers fetched successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getBuyers = async (req, res) => {
+  try {
+    const buyers = await User.find({ role: "Buyer" });
+
+    if (!buyers) {
+      return res.status(404).json({
+        success: false,
+        message: "No Buyers found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: buyers,
+      message: "Buyers fetched successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    await User.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,

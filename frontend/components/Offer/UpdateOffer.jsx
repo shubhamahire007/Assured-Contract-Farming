@@ -1,18 +1,17 @@
-import { useContext } from "react";
+import { use, useContext } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { AppContext } from "../../context/AppContext";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const UpdateRequirement = (props) => {
+const UpdateOffer = (props) => {
   const { register, handleSubmit } = useForm();
-  const {setUser} = useContext(AppContext);
-  
+  const { setUser } = useContext(AppContext);
   const onSubmit = (data) => {
-    const updateRequirement = async () => {
+    const UpdateOffer = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/requirements/${props.id}`, {
+        const response = await fetch(`${BASE_URL}/offers/${props.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -29,31 +28,37 @@ const UpdateRequirement = (props) => {
         }
         const result = await response.json();
         if (result.success) {
-          toast.success("Requirement updated successfully");
+          toast.success("Offer updated successfully");
           window.location.reload();
         } else {
-          toast.error(result.message || "Failed to update requirement");
+          toast.error(result.message || "Failed to update offer");
         }
       } catch (error) {
-        toast.error("An error occurred while updating the requirement");
+        console.log("msg:", error.message);
+        toast.error("An error occurred while updating the offer");
       }
     };
-
-    updateRequirement();
+    UpdateOffer();
   };
 
   return (
     <div>
-      <h2>Update Requirement</h2>
+      <h3>Update Offer</h3>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
           Crop:
-          <input type="text" {...register("crop")} defaultValue={props.crop} />
+          <input
+            type="text"
+            name="crop"
+            {...register("crop")}
+            defaultValue={props.crop}
+          />
         </label>
         <label>
           Quantity:
           <input
             type="text"
+            name="quantity"
             {...register("quantity")}
             defaultValue={props.quantity}
           />
@@ -62,23 +67,24 @@ const UpdateRequirement = (props) => {
           Expected Price:
           <input
             type="text"
+            name="expectedPrice"
             {...register("expectedPrice")}
             defaultValue={props.expectedPrice}
           />
         </label>
         <label>
-          Needed By:
+          Expected Duration:
           <input
-            type="date"
-            {...register("neededBy")}
-            defaultValue={props.neededBy.split("T")[0]}
+            type="text"
+            name="expectedDuration"
+            {...register("expectedDuration")}
+            defaultValue={props.expectedDuration}
           />
         </label>
-        <br />
-        <button type="submit">Submit</button>
+        <button type="submit">Update Offer</button>
       </form>
     </div>
   );
 };
 
-export default UpdateRequirement;
+export default UpdateOffer;

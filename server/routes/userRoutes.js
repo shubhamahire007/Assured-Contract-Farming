@@ -1,28 +1,17 @@
 import express from "express";
-import { login, signUp } from "../controllers/userController.js";
+import { login, signUp,getFarmers,getBuyers,deleteUser } from "../controllers/userController.js";
 import { isFarmer, auth, isBuyer, isAdmin } from "../middlewares/authMiddleware.js";
+import { get } from "mongoose";
 
 const router = express.Router();
 
 router.post('/login', login);
 router.post('/signup', signUp);
 
-router.get('/farmer', auth, isFarmer, (req,res) => {
-    res.json({
-        message: "Welcome Farmer"
-    });
-})
+router.get('/farmers', auth, isAdmin, getFarmers);
 
-router.get('/buyer', auth, isBuyer, (req,res) => {
-    res.json({
-        message: "Welcome Buyer"
-    });
-})
+router.get('/buyers', auth, isAdmin, getBuyers);
 
-router.get('/admin', auth, isAdmin, (req,res) => {
-    res.json({
-        message: "Welcome Admin"
-    });
-})
+router.delete('/:id', auth, isAdmin, deleteUser);
 
 export default router;

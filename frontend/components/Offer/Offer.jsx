@@ -1,22 +1,19 @@
-import UpdateRequirement from "./UpdateRequirement";
-import { useState } from "react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
+import UpdateOffer from "./UpdateOffer";
 import toast from "react-hot-toast";
 import Button from "../common/Button";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const Requirement = (props) => {
+const Offer = (props) => {
+  const { user,role } = useContext(AppContext);
   const [showUpdate, setShowUpdate] = useState(false);
   const [requestStatus, setRequestStatus] = useState(props.requestStatus);
-  const { role } = useContext(AppContext);
   const handleDelete = () => {
-    // Call the delete function passed from the parent component
-    confirm("Are you sure you want to delete this requirement?") &&
+    confirm("Are you sure you want to delete this offer?") &&
       props.onDelete(props.id);
   };
-
   const handleUpdate = () => {
     setShowUpdate(true);
   };
@@ -31,7 +28,7 @@ const Requirement = (props) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ requirementId: props.id }),
+        body: JSON.stringify({ offerId: props.id }),
       });
 
       const result = await response.json();
@@ -45,52 +42,41 @@ const Requirement = (props) => {
       console.error("Error sending request:", error);
     }
   };
-
   // --- ADD THIS HELPER FUNCTION ---
   const renderRequestButton = () => {
-    if (role !== "Farmer") return null;
+    if (user.role !== "Buyer") return null;
 
     switch (requestStatus) {
       case "Pending":
-        return <Button disabled>Request Sent</Button>;
+        return <button disabled>Request Sent</button>;
       case "Accepted":
-        return (
-          <Button disabled >
-            Accepted
-          </Button>
-        );
+        return <button disabled style={{ backgroundColor: 'lightgreen' }}>Accepted</button>;
       case "Rejected":
-        return (
-          <Button disabled variant="danger">
-            Rejected
-          </Button>
-        );
+        return <button disabled style={{ backgroundColor: 'salmon' }}>Rejected</button>;
       default:
-        return <Button onClick={handleSendRequest}>Apply for Contract</Button>;
+        return <button onClick={handleSendRequest}>Apply for Contract</button>;
     }
   };
 
   return (
     <div>
       <li>
-        {role !== "Buyer" && <span>Buyer Name: {props.buyerId.name}</span>}
+        {role !== "Farmer" && <span>Farmer Name: {props.farmerId.name}</span>}
         {" "}<span>Crop: {props.crop}</span> -{" "}
         <span>Quantity: {props.quantity}</span> -{" "}
         <span>Expected Price: {props.expectedPrice}</span> -{" "}
-        <span>Needed By: {props.neededBy.split("T")[0]}</span>
+        <span>Expected Duration: {props.expectedDuration}</span>
       </li>
-      {role === "Buyer" && (
+      {user.role === "Farmer" && (
         <>
-          {/* <button onClick={handleUpdate}>Update</button> {"  "} */}
-          {/* <button onClick={handleDelete}>Delete</button> */}
-          <Button onClick={handleUpdate}>Update</Button> {"  "} 
+          <Button onClick={handleUpdate}>Update</Button> {"  "}
           <Button onClick={handleDelete} variant="danger">Delete</Button>
         </>
       )}
       {renderRequestButton()}
-      {showUpdate && <UpdateRequirement {...props} />}
+      {showUpdate && <UpdateOffer {...props} />}
     </div>
   );
 };
 
-export default Requirement;
+export default Offer;

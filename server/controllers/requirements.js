@@ -1,4 +1,5 @@
 import Requirement from '../models/requirementModel.js';
+import Request from '../models/requestModel.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,11 +31,35 @@ export const postRequirements = async (req,res) => {
 
 export const getRequirements = async (req,res) => {
     try {
-        const requirements = await Requirement.find();
+        // const requirements = await Requirement.find();
+        const requirements = await Requirement.find().populate('buyerId','name').lean() // for plain JS objects;
+        const userId = req.userObj.id;
+        
+        // Find all requests sent by the current user for any of the fetched requirements
+        const requirementIds = requirements.map(r => r._id);
+        const userRequests = await Request.find({
+            senderId: userId,
+            requirementId: { $in: requirementIds }
+        });
+        
+        // Create a map for quick lookups
+        const requestStatusMap = new Map();
+        userRequests.forEach(request => {
+            requestStatusMap.set(request.requirementId.toString(), request.status);
+        });
+        
+        // Attach the request status to each requirement
+        const requirementsWithStatus = requirements.map(requirement => {
+            return {
+                ...requirement,
+                requestStatus: requestStatusMap.get(requirement._id.toString()) || null
+            };
+        });
+     
         return res.status(200).json({
             success: true,
             message: "Requirements fetched successfully",
-            data: requirements
+            data: requirementsWithStatus
         });
     } catch (error) {
         return res.status(500).json({
@@ -160,6 +185,8 @@ export const deleteRequirement = async (req,res) => {
             });
         }
 
+        await Request.deleteMany({ requirementId: id });
+        
         await Requirement.findByIdAndDelete(id);
 
         return res.status(200).json({

@@ -10,7 +10,7 @@ const offerSchema = new mongoose.Schema(
     },
     crop: { type: String, required: true },
     quantity: { type: String, required: true }, // in tons, quintals, etc.
-    pricePerUnit: { type: String, required: true },
+    expectedPrice: { type: String, required: true },
     expectedDuration: { type: String, required: true }, // e.g., "2 weeks", "1 month"
     status: {
       type: String,

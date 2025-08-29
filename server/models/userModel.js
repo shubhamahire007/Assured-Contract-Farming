@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema(
       default: false
     },
 
+    requests: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Request"
+    }],
+    
     verificationDetails: {
       documents: [{
         docType: { type: String }, // e.g., "Aadhaar", "Land Proof", "GST Cert"

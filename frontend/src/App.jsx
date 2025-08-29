@@ -3,8 +3,8 @@ import './App.css'
 import { Routes, Route } from "react-router-dom";
 import Navigation from '../components/Navigation'
 import FarmerDashboard from '../pages/dashboard/FarmerDashboard';
-import BuyerDashboard from '../pages/dashboard/Buyer/BuyerDashboard';
-import AdminDashboard from '../pages/dashboard/AdminDashboard';
+import BuyerDashboard from '../pages/dashboard/BuyerDashboard';
+import AdminDashboard from '../pages/dashboard/Admin/AdminDashboard';
 import Login from '../pages/auth/Login';
 import Signup from '../pages/auth/Signup';
 import Home from '../pages/Home';

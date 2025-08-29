@@ -9,7 +9,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const { setLogin } = useContext(AppContext);
+  const { isLogin, user, setUser,role } = useContext(AppContext);
   const submitHandler = async (data) => {
     try {
       const res = await fetch(`${BASE_URL}/login`, {
@@ -20,9 +20,8 @@ const Login = () => {
         body: JSON.stringify(data), // converted from js object to JSON
       });
 
-      console.log("response:", res);
       const result = await res.json(); // converted server response to JS object
-      console.log("result:", result);
+      console.log("Login result:", result);
       if (result.success) {
         localStorage.setItem("token", result.token);
         localStorage.setItem("email", result.userObj.email);
@@ -30,12 +29,21 @@ const Login = () => {
         localStorage.setItem("role", result.userObj.role);
         localStorage.setItem("id", result.userObj._id);
 
+        const standardizedUser = {
+          id: result.userObj._id,
+          name: result.userObj.name,
+          email: result.userObj.email,
+          role: result.userObj.role,
+          isVerified: result.userObj.isVerified || false,
+        };
+        setUser(standardizedUser);
+
         if (result.userObj.role == "Admin") {
           navigate("/admin-dashboard");
         } else {
           navigate("/");
         }
-        setLogin(true);
+        // isLogin(true);
         toast.success("Login successfully");
       } else {
         toast.error(result.message || "Login failed");

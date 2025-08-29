@@ -2,21 +2,32 @@ import { useEffect, createContext, useState } from "react";
 
 export const AppContext = createContext();
 
-export default function AppContextProvider({ children}) {
-    const [isLogin, setLogin] = useState(!!localStorage.getItem('token'));
+const getInitialUser = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  return {
+    id: localStorage.getItem("id"),
+    name: localStorage.getItem("name"),
+    email: localStorage.getItem("email"),
+    role: localStorage.getItem("role"),
+    isVerified: localStorage.getItem("isVerified")
+  };
+};
 
-    useEffect(() => {
-        setLogin(!!localStorage.getItem('token'));
-    }, [])
+export default function AppContextProvider({ children }) {
+  const [isLoading, setLoading] = useState(false);
+  const [user, setUser] = useState(getInitialUser());
 
-     const value = {
-        isLogin,
-        setLogin
-    }
+  const isLogin = !!user;
+  const role = user ? user.role : "";
+  const value = {
+    user,
+    setUser,
+    isLogin,
+    isLoading,
+    setLoading,
+    role,
+  };
 
-    return (
-        <AppContext.Provider value={value}>
-            {children}
-        </AppContext.Provider>
-    )
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

@@ -7,12 +7,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AppContextProvider>
       <BrowserRouter>
         <App />
         <Toaster />
       </BrowserRouter>
     </AppContextProvider>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

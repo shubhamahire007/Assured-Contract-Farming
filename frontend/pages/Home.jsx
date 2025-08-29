@@ -1,6 +1,10 @@
 import RequirementsList from "../components/Requirement/RequirementsList";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
+import OffersList from "../components/Offer/OffersList";
+
 const Home = () => {
-  const role = localStorage.getItem("role") || "";
+  const { role } = useContext(AppContext);
   return (
     <div>
       <h1>Home</h1>
@@ -9,6 +13,12 @@ const Home = () => {
         <>
           <h2>Buyers Requirements</h2>
           <RequirementsList />
+        </>
+      )}
+      {role == "Buyer" && (
+        <>
+          <h2>Farmers Offers</h2>
+          <OffersList />
         </>
       )}
     </div>

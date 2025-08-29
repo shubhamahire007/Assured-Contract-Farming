@@ -1,14 +1,15 @@
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-
+import { useNavigate } from "react-router-dom";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const PostRequirement = () => {
+const PostOffer = () => {
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      const res = await fetch(`${BASE_URL}/requirements`, {
+      const response = await fetch(`${BASE_URL}/offers`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -16,32 +17,34 @@ const PostRequirement = () => {
         },
         body: JSON.stringify(data),
       });
-      if (res.status === 401) {
+
+      if (response.status === 401) {
         localStorage.clear();
         setUser(null);
         toast.error("Your session has expired.");
         navigate("/login");
         return;
       }
-      const result = await res.json();
+      
+      const result = await response.json();
+      
       if (result.success) {
-        toast.success("Requirement posted successfully");
+        toast.success("Offer posted successfully");
         window.location.reload(); // Refresh the current page
       } else {
-        console.log("Failed to post requirement:", result);
+        console.log("Failed to post offer:", result);
         console.log("result msg:", result.message);
-        toast.error("Failed to post requirement");
+        toast.error(result.message || "Failed to post offer");
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to post requirement");
+      toast.error("Failed to post offer");
     }
-    console.log(data);
   };
 
   return (
     <div>
-      <h2>Post Requirement</h2>
+      <h2>Post Offer</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
           Crop:
@@ -67,14 +70,20 @@ const PostRequirement = () => {
         </label>
         <br />
         <label>
-          Needed By:
-          <input type="date" {...register("neededBy")} />
+          {" "}
+          Expected Duration:
+          <input
+            type="text"
+            {...register("expectedDuration")}
+            placeholder="e.g. 3 Month"
+          />
         </label>
-        <br /> <br />
+        <br />
+        <br />
         <button type="submit">Submit</button>
       </form>
     </div>
   );
 };
 
-export default PostRequirement;
+export default PostOffer;
