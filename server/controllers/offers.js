@@ -1,6 +1,7 @@
 import Offer from '../models/offerModel.js';
 import Request from '../models/requestModel.js';
 import dotenv from 'dotenv';
+import Contract from '../models/contractModel.js';
 
 dotenv.config();
 
@@ -13,8 +14,16 @@ export const postOffer = async (req,res) => {
             quantity,
             expectedPrice,
             expectedDuration,
-            farmerId              
+            farmerId,
+            description: req.body.description || "",
+            location: req.body.location || "",
         });
+        if(!crop || !quantity || !expectedPrice || !expectedDuration) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all required fields"
+            });
+        }
         return res.status(201).json({
             success: true,
             message: "Offer posted successfully",
@@ -123,12 +132,14 @@ export const getOfferByFarmerId = async (req,res) => {
 export const updateOffer = async (req,res) => {
     try {
         const {id} = req.params;
-        const {crop, quantity, expectedPrice, expectedDuration} = req.body;
+        const {crop, quantity, expectedPrice, expectedDuration, description, location} = req.body;
         const offer = await Offer.findByIdAndUpdate(id, {
             crop,
             quantity,
             expectedPrice,
-            expectedDuration
+            expectedDuration,
+            description,
+            location
         }, {new: true});
         if (!offer) {
             return res.status(404).json({
@@ -172,7 +183,8 @@ export const deleteOffer = async (req,res) => {
         }
 
         await Request.deleteMany({ offerId: id });
-        
+        // await Contract.deleteMany({ offerId: id });
+
         await Offer.findByIdAndDelete(id);
 
         return res.status(200).json({

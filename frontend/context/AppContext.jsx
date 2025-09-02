@@ -10,19 +10,23 @@ const getInitialUser = () => {
     name: localStorage.getItem("name"),
     email: localStorage.getItem("email"),
     role: localStorage.getItem("role"),
-    isVerified: localStorage.getItem("isVerified")
+    isVerified: localStorage.getItem("isVerified"),
+    token: localStorage.getItem("token"),
   };
 };
 
 export default function AppContextProvider({ children }) {
   const [isLoading, setLoading] = useState(false);
   const [user, setUser] = useState(getInitialUser());
+  const [offers, setOffers] = useState([]);
 
   const isLogin = !!user;
   const role = user ? user.role : "";
   const value = {
     user,
     setUser,
+    offers,
+    setOffers,
     isLogin,
     isLoading,
     setLoading,

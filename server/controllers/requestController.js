@@ -61,8 +61,8 @@ export const getRequests = async (req, res) => {
         })
         .populate('senderId', 'name role isVerified')
         .populate('receiverId', 'name role isVerified')
-        .populate({ path: 'requirementId', select: 'crop quantity' })
-        .populate({ path: 'offerId', select: 'crop quantity' });
+        .populate({ path: 'requirementId', select: 'crop quantity expectedPrice neededBy location description' })
+        .populate({ path: 'offerId', select: 'crop quantity expectedPrice expectedDuration location description' });
 
         res.status(200).json({
             success: true,

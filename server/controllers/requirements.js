@@ -1,12 +1,19 @@
 import Requirement from '../models/requirementModel.js';
 import Request from '../models/requestModel.js';
 import dotenv from 'dotenv';
+import Contract from '../models/contractModel.js';
 
 dotenv.config();
 
 export const postRequirements = async (req,res) => {
     try {
         const {crop, quantity, expectedPrice, neededBy} = req.body;
+        if(!crop || !quantity || !expectedPrice || !neededBy) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all required fields"
+            });
+        }
         const buyerId = req.userObj.id;
 
         await Requirement.create({
@@ -14,7 +21,9 @@ export const postRequirements = async (req,res) => {
             quantity,
             expectedPrice,
             neededBy,
-            buyerId
+            buyerId,
+            description: req.body.description || "",
+            location: req.body.location || "",
         });
         return res.status(200).json({
             success:true,
@@ -121,7 +130,7 @@ export const getRequirementByBuyerId = async (req,res) => {
 export const editRequirement = async (req,res) => {
     try {
         const { id } = req.params;
-        const { crop, quantity, expectedPrice, neededBy } = req.body;
+        const { crop, quantity, expectedPrice, neededBy, description, location } = req.body;
 
         const requirement = await Requirement.findById(id);
 
@@ -146,6 +155,8 @@ export const editRequirement = async (req,res) => {
         requirement.quantity = quantity || requirement.quantity;
         requirement.expectedPrice = expectedPrice || requirement.expectedPrice;
         requirement.neededBy = neededBy || requirement.neededBy;
+        requirement.description = description || requirement.description;
+        requirement.location = location || requirement.location;
 
         await Requirement.findByIdAndUpdate(id, requirement, { new: true });
 
@@ -186,7 +197,8 @@ export const deleteRequirement = async (req,res) => {
         }
 
         await Request.deleteMany({ requirementId: id });
-        
+        // await Contract.deleteMany({ requirementId: id });
+
         await Requirement.findByIdAndDelete(id);
 
         return res.status(200).json({

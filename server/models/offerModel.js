@@ -12,6 +12,8 @@ const offerSchema = new mongoose.Schema(
     quantity: { type: String, required: true }, // in tons, quintals, etc.
     expectedPrice: { type: String, required: true },
     expectedDuration: { type: String, required: true }, // e.g., "2 weeks", "1 month"
+    description: String,
+    location: String,
     status: {
       type: String,
       enum: ["Open", "Contracted", "Closed"],

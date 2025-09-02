@@ -1,21 +1,20 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import UpdateOffer from "./UpdateOffer";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 import Button from "../common/Button";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Offer = (props) => {
-  const { user,role } = useContext(AppContext);
-  const [showUpdate, setShowUpdate] = useState(false);
+  const { user, role } = useContext(AppContext);
+  const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [requestStatus, setRequestStatus] = useState(props.requestStatus);
+
   const handleDelete = () => {
-    confirm("Are you sure you want to delete this offer?") &&
+    if (confirm("Are you sure you want to delete this offer?")) {
       props.onDelete(props.id);
-  };
-  const handleUpdate = () => {
-    setShowUpdate(true);
+    }
   };
 
   const handleSendRequest = async () => {
@@ -40,41 +39,112 @@ const Offer = (props) => {
       }
     } catch (error) {
       console.error("Error sending request:", error);
+      toast.error("An error occurred while sending the request.");
     }
   };
-  // --- ADD THIS HELPER FUNCTION ---
+
   const renderRequestButton = () => {
     if (user.role !== "Buyer") return null;
 
     switch (requestStatus) {
       case "Pending":
-        return <button disabled>Request Sent</button>;
+        return <Button disabled>Request Sent</Button>;
       case "Accepted":
-        return <button disabled style={{ backgroundColor: 'lightgreen' }}>Accepted</button>;
+        return <Button disabled>Accepted</Button>;
       case "Rejected":
-        return <button disabled style={{ backgroundColor: 'salmon' }}>Rejected</button>;
+        return (
+          <Button disabled variant="danger">
+            Rejected
+          </Button>
+        );
+      case "Contracted":
+        return <Button disabled>Contracted</Button>;
       default:
-        return <button onClick={handleSendRequest}>Apply for Contract</button>;
+        return <Button onClick={handleSendRequest}>Apply for Contract</Button>;
     }
   };
 
   return (
-    <div>
-      <li>
-        {role !== "Farmer" && <span>Farmer Name: {props.farmerId.name}</span>}
-        {" "}<span>Crop: {props.crop}</span> -{" "}
-        <span>Quantity: {props.quantity}</span> -{" "}
-        <span>Expected Price: {props.expectedPrice}</span> -{" "}
-        <span>Expected Duration: {props.expectedDuration}</span>
-      </li>
-      {user.role === "Farmer" && (
-        <>
-          <Button onClick={handleUpdate}>Update</Button> {"  "}
-          <Button onClick={handleDelete} variant="danger">Delete</Button>
-        </>
+    <div className="bg-white rounded-lg shadow-md p-6 flex flex-col justify-between">
+      <div>
+        {/* Card Header */}
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="text-xl font-bold text-gray-800">{props.crop}</h3>
+            {role !== "Farmer" && (
+              <p className="text-sm text-gray-500">
+                Posted by: {props.farmerId.name}
+              </p>
+            )}
+          </div>
+          {/* <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
+            {props.status}
+          </span> */}
+        </div>
+
+        {/* Card Body */}
+        <div className="space-y-3 text-gray-700">
+          <div className="flex justify-between">
+            <span className="font-semibold">Quantity:</span>
+            <span>{props.quantity}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold">Price:</span>
+            <span>{props.expectedPrice}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold">Duration:</span>
+            <span>{props.expectedDuration}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold">Location:</span>
+            <span>{props.location}</span>
+          </div>
+
+          {props.description && (
+            <div className="text-md pt-2 ">
+              <strong className="font-semibold">Description:</strong> {props.description}
+            </div>
+          )}
+
+          {/* {props.description && (
+            <p className="text-sm pt-2">
+              <strong className="font-semibold">Info:</strong> {props.description}
+            </p>
+          )} */}
+        </div>
+      </div>
+
+      {/* Card Footer / Actions */}
+      <div className="flex justify-end space-x-2 mt-6">
+        {user.role === "Farmer" && (
+          <>
+            <Button onClick={() => setUpdateModalOpen(true)}>Update</Button>
+            <Button onClick={handleDelete} variant="danger">
+              Delete
+            </Button>
+          </>
+        )}
+        {renderRequestButton()}
+      </div>
+
+      {/* The Update Modal */}
+      {isUpdateModalOpen && (
+        <div className="mt-14 fixed inset-0 bg-opacity-50 backdrop-blur-sm z-40 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg shadow-xl z-50 w-full max-w-lg relative">
+            <button
+              onClick={() => setUpdateModalOpen(false)}
+              className="absolute top-2 right-2 text-4xl text-gray-500 hover:text-gray-800"
+            >
+              &times;
+            </button>
+            <UpdateOffer
+              {...props}
+              closeModal={() => setUpdateModalOpen(false)}
+            />
+          </div>
+        </div>
       )}
-      {renderRequestButton()}
-      {showUpdate && <UpdateOffer {...props} />}
     </div>
   );
 };

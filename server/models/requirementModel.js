@@ -12,9 +12,11 @@ const requirementSchema = new mongoose.Schema(
     quantity: { type: String, required: true },
     expectedPrice: String,
     neededBy: Date,
+    description: String,
+    location: String,
     status: {
       type: String,
-      enum: ["Open", "Fulfilled", "Closed"],
+      enum: ["Open", "Contracted", "Closed"],
       default: "Open",
     },
     // isOpen: { type: Boolean, default: true },

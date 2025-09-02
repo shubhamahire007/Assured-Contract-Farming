@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Requirement from "./Requirement.jsx";
-import toast from "react-hot-toast";
+import {toast} from "react-toastify";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext.jsx";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -13,6 +13,14 @@ const RequirementsList = () => {
   const [requirements, setRequirements] = useState([]);
   const { isLoading, setLoading, role, user, setUser } = useContext(AppContext);
   const navigate = useNavigate();
+
+  const handleUpdateSuccess = (updatedRequirement) => {
+    setRequirements((prevRequirements) =>
+      prevRequirements.map((req) =>
+        req._id === updatedRequirement._id ? updatedRequirement : req
+      )
+    );
+  };
 
   useEffect(() => {
     const fetchRequirements = async () => {
@@ -82,32 +90,32 @@ const RequirementsList = () => {
     deleteRequirement();
   };
 
+   if (isLoading) {
+    return <div className="flex justify-center p-8"><CircularProgress /></div>;
+  }
+
   return (
-    <>
-      {isLoading && (
-        <div>
-          <CircularProgress />
+     <div>
+      {role === "Buyer" && <h2 className="mt-10 text-2xl font-bold mb-6">My Requirements</h2>}
+
+      {requirements.length === 0 ? (
+        <div className="text-center p-8 bg-white rounded-lg shadow-sm">
+            <h3 className="text-lg font-medium">No requirements found.</h3>
         </div>
-      )}
-
-      {role == "Buyer" && <h2>My Requirements</h2>}
-
-      {!isLoading && requirements.length === 0 ? (
-        <p>No requirements found.</p>
       ) : (
-        <ol>
-          {requirements.map((requirement, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {requirements.map((requirement) => (
             <Requirement
               key={requirement._id}
               {...requirement}
               id={requirement._id}
-              idx={idx}
               onDelete={onDelete}
+              onUpdateSuccess={handleUpdateSuccess}
             />
           ))}
-        </ol>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
