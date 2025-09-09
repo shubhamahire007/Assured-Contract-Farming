@@ -60,17 +60,6 @@ const UpdateRequirement = ({ closeModal, onUpdateSuccess, ...props }) => {
             className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
-        {/* <div>
-          <label className="block text-md font-medium text-gray-700">
-            Quantity:
-          </label>
-          <input
-            type="text"
-            {...register("quantity")}
-            defaultValue={props.quantity}
-            className="p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-          />
-        </div> */}
         <div className="flex justify-between">
           <div>
             <label className="block text-md font-semibold text-gray-700">

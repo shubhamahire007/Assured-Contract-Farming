@@ -10,6 +10,7 @@ import contractRoutes from './routes/contractRoutes.js';
 
 const app = express();
 dotenv.config();
+
 dbConnect();
 
 app.use(express.json());

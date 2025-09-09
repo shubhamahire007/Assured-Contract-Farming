@@ -1,7 +1,6 @@
 import Requirement from '../models/requirementModel.js';
 import Request from '../models/requestModel.js';
 import dotenv from 'dotenv';
-import Contract from '../models/contractModel.js';
 
 dotenv.config();
 
@@ -30,7 +29,7 @@ export const postRequirements = async (req,res) => {
             message: "Requirements saved successfully"
         })
     } catch (error) {
-        return res.status(500).json({
+        return res.status(error.code).json({
             success:false,
             message: "Failed to Post Requirements",
             error: error.message

@@ -9,6 +9,14 @@ export const postOffer = async (req,res) => {
     try {
         const {crop, quantity, expectedPrice, expectedDuration} = req.body;
         const farmerId = req.userObj.id;
+
+        if(!crop || !quantity || !expectedPrice || !expectedDuration) {
+            return res.status(400).json({
+                success: false,
+                message: "Please provide all required fields"
+            });
+        }
+
         const offer = await Offer.create({
             crop,
             quantity,
@@ -18,12 +26,7 @@ export const postOffer = async (req,res) => {
             description: req.body.description || "",
             location: req.body.location || "",
         });
-        if(!crop || !quantity || !expectedPrice || !expectedDuration) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide all required fields"
-            });
-        }
+
         return res.status(201).json({
             success: true,
             message: "Offer posted successfully",
@@ -133,6 +136,7 @@ export const updateOffer = async (req,res) => {
     try {
         const {id} = req.params;
         const {crop, quantity, expectedPrice, expectedDuration, description, location} = req.body;
+        
         const offer = await Offer.findByIdAndUpdate(id, {
             crop,
             quantity,
@@ -141,6 +145,7 @@ export const updateOffer = async (req,res) => {
             description,
             location
         }, {new: true});
+
         if (!offer) {
             return res.status(404).json({
                 success: false,

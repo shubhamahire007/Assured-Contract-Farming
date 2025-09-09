@@ -1,7 +1,6 @@
 import express from "express";
 import { login, signUp,getFarmers,getBuyers,deleteUser } from "../controllers/userController.js";
-import { isFarmer, auth, isBuyer, isAdmin } from "../middlewares/authMiddleware.js";
-import { get } from "mongoose";
+import { auth, isAdmin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 

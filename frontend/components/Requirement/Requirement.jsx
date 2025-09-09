@@ -96,7 +96,8 @@ const Requirement = (props) => {
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Needed By:</span>
-            <span>{new Date(props.neededBy).toLocaleDateString()}</span>
+            {/* <span>{new Date(props.neededBy).toLocaleDateString()}</span> */}
+            <span>{new Date(props.neededBy).toDateString()  }</span>
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Location:</span>

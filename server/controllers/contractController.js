@@ -133,7 +133,7 @@ export const confirmContract = async (req, res) => {
     const userRole = req.userObj.role;
 
     const contract = await Contract.findById(contractId);
-    console.log(contract);
+   
     if (!contract) {
       return res.status(404).json({
         success: false,
@@ -170,13 +170,17 @@ export const confirmContract = async (req, res) => {
     const itemId = contract.requirementId
       ? contract.requirementId
       : contract.buyerId;
-    //remaining
-    if (
-      contract.confirmation.farmerConfirmed &&
-      contract.confirmation.buyerConfirmed
-    ) {
+    
+    if (contract.confirmation.farmerConfirmed && contract.confirmation.buyerConfirmed) {
       contract.status = "Active";
+      if(contract.offerId){
+        await Offer.findByIdAndUpdate(contract.offerId, {status:"Contracted"});
+      }
+      if(contract.requirementId) {
+        await Requirement.findByIdAndUpdate(contract.requirementId, {status: "Contracted"});
+      }
     }
+    
     await contract.save();
 
     res.status(200).json({
