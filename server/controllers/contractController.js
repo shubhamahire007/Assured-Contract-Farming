@@ -2,7 +2,7 @@ import Contract from "../models/contractModel.js";
 import Request from "../models/requestModel.js";
 import Offer from "../models/offerModel.js";
 import Requirement from "../models/requirementModel.js";
-import User from "../models/userModel.js";
+
 // @desc    Get the pre-filled data needed to create a contract from a request
 // @route   GET /api/contracts/data-for-creation/:requestId
 export const getContractData = async (req, res) => {
