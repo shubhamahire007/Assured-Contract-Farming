@@ -19,7 +19,6 @@ const requirementSchema = new mongoose.Schema(
       enum: ["Open", "Contracted", "Closed"],
       default: "Open",
     },
-    // isOpen: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
