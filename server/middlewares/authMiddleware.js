@@ -2,11 +2,11 @@ import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+// verify jwt token middleware
 export const auth = (req,res,next) => {
     try {
         const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1];// Bearer <token>
+        const token = authHeader?.split(' ')[1];// Bearer <token>
 
         if(!token) {
             return res.status(401).json({
@@ -17,8 +17,8 @@ export const auth = (req,res,next) => {
 
         //verify token
         try {
-            const decode = jwt.verify(token,process.env.JWT_SECRET);
-            req.userObj = decode; //stored decode(payload(role,email)) in userObj
+            const decodedToken = jwt.verify(token,process.env.JWT_SECRET);
+            req.userObj = decodedToken; //stored decode(payload(role,email)) in userObj
         } catch (error) {
             return res.status(401).json({
                 success:false,

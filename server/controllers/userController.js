@@ -84,7 +84,7 @@ export const login = async (req, res) => {
       userObj.token = token;
       // const options = {
       //   expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-      //   httpOnly: true, // means it cant access at client side
+      //   httpOnly: true, // means it cant access/modify at client side, only at server side
       // };
       // res.cookie("myToken", token, options).status(200).json({
       //   success: true,
