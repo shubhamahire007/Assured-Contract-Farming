@@ -1,4 +1,4 @@
-<h2>AgriSure - A Secure Contract Farming Ecosystem</h2>
+<h2>AgriSure - Assured Contract Farming</h2>
 <p align="center">
 <img src="frontend/public/logo_f.png" alt="AgriSure Logo" width="400"/>
 </p>
