@@ -10,7 +10,7 @@ Key Features:
 
 Tech Stack: HTML, CSS, JavaScript, React.js, Node.js, Express.js, MongoDB, Tailwind.css
 
-AgriSure - A Secure Contract Farming Ecosystem
+<h2>AgriSure - A Secure Contract Farming Ecosystem<h2>
 <p align="center">
 <img src="frontend/public/logo_f.png" alt="AgriSure Logo" width="400"/>
 </p>
