@@ -11,6 +11,7 @@ By creating a single source of truth, we aim to empower farmers with guaranteed 
 </p>
 
 🚀 Key Features
+
 👤 User Management: Separate, secure dashboards for Farmers, Buyers, and Administrators.
 
 🔐 Role-Based Access Control: Ensures that users can only access functionalities relevant to their role.
