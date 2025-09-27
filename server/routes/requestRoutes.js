@@ -1,11 +1,11 @@
 import express from "express";
 import {sendRequest, getRequests, updateRequestStatus } from '../controllers/requestController.js';
-import { auth } from "../middlewares/authMiddleware.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post('/', auth, sendRequest);
-router.get('/', auth, getRequests);
-router.put('/:id', auth, updateRequestStatus);
+router.post('/', verifyJWT, sendRequest);
+router.get('/', verifyJWT, getRequests);
+router.put('/:id', verifyJWT, updateRequestStatus);
 
 export default router;

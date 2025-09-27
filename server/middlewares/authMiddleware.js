@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 // verify jwt token middleware
-export const auth = (req,res,next) => {
+export const verifyJWT = (req,res,next) => {
     try {
         const authHeader = req.headers.authorization;
         const token = authHeader?.split(' ')[1];// Bearer <token>

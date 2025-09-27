@@ -1,16 +1,16 @@
 import express from "express";
-import { auth } from "../middlewares/authMiddleware.js";
+import { verifyJWT } from "../middlewares/authMiddleware.js";
 import { createContract, getContractData,getContractsByUserId, getContracts,confirmContract,getContractById  } from '../controllers/contractController.js';
 
 const router = express();
 
-router.post('/', auth, createContract);
+router.post('/', verifyJWT, createContract);
 
-router.get('/', auth, getContracts);
-router.get('/:id', auth, getContractById);
-router.get('/user/:userId', auth, getContractsByUserId);
-router.get('/data-for-creation/:requestId', auth, getContractData);
+router.get('/', verifyJWT, getContracts);
+router.get('/:id', verifyJWT, getContractById);
+router.get('/user/:userId', verifyJWT, getContractsByUserId);
+router.get('/data-for-creation/:requestId', verifyJWT, getContractData);
 
-router.put('/:contractId', auth, confirmContract);
+router.put('/:contractId', verifyJWT, confirmContract);
 
 export default router;
