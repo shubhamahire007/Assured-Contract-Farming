@@ -4,16 +4,18 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import Button from "../../components/common/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const { setUser,user } = useContext(AppContext);
+  const { setUser, user, isLoading, setLoading } = useContext(AppContext);
 
   const submitHandler = async (data) => {
     try {
+      setLoading(true);
       const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
@@ -51,8 +53,18 @@ const Login = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error(error.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center p-8">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">

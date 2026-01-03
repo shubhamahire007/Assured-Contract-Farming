@@ -2,15 +2,20 @@ import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Button from "../../components/common/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Signup = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { setUser, user, isLoading, setLoading } = useContext(AppContext);
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const res = await fetch(`${BASE_URL}/signup`, {
         method: "POST",
         headers: {
@@ -30,8 +35,18 @@ const Signup = () => {
     } catch (error) {
       console.error("Error:", error);
       toast.error(error.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center p-8">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
