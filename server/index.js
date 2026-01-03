@@ -14,7 +14,10 @@ dotenv.config();
 dbConnect();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: ["https://agrisure-contract-farming.vercel.app/"],
+    credentials: true
+}));
 
 app.get('/', (req, res) => {
     res.send("Welcome to Assured Contract Farming API")
