@@ -82,7 +82,7 @@ const Navigation = () => {
             {isLogin ? (
               <div className="px-5">
                 <p className="text-sm text-gray-500">Welcome, {user.name}</p>
-                <button onClick={handleLogout} className=" text-left mt-2 bg-red-100 text-red-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-red-200">
+                <button onClick={handleLogout} className="bg-green-600 text-white text-left mt-2 px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700">
                   Logout
                 </button>
               </div>
