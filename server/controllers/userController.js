@@ -59,7 +59,6 @@ export const login = async (req, res) => {
         message: "Please fill details",
       });
     }
-
     let userData = await User.findOne({ email });
     if (!userData) {
       return res.status(404).json({
@@ -67,7 +66,6 @@ export const login = async (req, res) => {
         message: "User not registered. Do signUp",
       });
     }
-
     let isMatch = await bcrypt.compare(password, userData.password);
     if (isMatch) {
       const payload = {
