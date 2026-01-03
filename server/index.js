@@ -15,7 +15,7 @@ dbConnect();
 
 app.use(express.json());
 app.use(cors({
-    origin: ["https://agrisure-contract-farming.vercel.app/"],
+    origin: ["https://agrisure-contract-farming.vercel.app", "http://localhost:5173"],
     credentials: true
 }));
 
